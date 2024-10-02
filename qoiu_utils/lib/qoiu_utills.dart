@@ -31,3 +31,11 @@ extension DebugColor on String {
   String dpYellow() => "\x1B[33m$this\x1B[0m";
   String dpBlue() => "\x1B[34m$this\x1B[0m";
 }
+
+extension NullableExtention<T> on T {
+  R? let<R>(R Function(T that) op) => this == null ? null : op(this);
+}
+
+extension ColorFilterOnColor on Color {
+  ColorFilter defaultFilter() => ColorFilter.mode(this, BlendMode.srcATop);
+}
