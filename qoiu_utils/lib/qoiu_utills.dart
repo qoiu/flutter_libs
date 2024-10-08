@@ -42,3 +42,9 @@ extension NullableExtention<T> on T {
 extension ColorFilterOnColor on Color {
   ColorFilter defaultFilter() => ColorFilter.mode(this, BlendMode.srcATop);
 }
+
+T parseEnum<T extends Enum>(List<T> list, String? data, [T? defaultValue]) {
+  return list.where((element) => element.name == data).firstOrNull ??
+      defaultValue ??
+      list.first;
+}
