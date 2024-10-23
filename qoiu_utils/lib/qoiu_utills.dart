@@ -1,5 +1,6 @@
 library qoiu_utills;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qoiu_utils/navigation.dart';
 
@@ -22,10 +23,19 @@ extension DefaultDuration on Duration  {
 
 extension PrintString on String {
   String get digits => replaceAll(RegExp(r'[^0-9]'),'');
-  print() => debugPrint(this);
-  printLong() => debugPrint(this, wrapWidth: 1024);
+  print() {
+    if (kDebugMode) {
+      debugPrint(this);
+    }
+  }
+  printLong() {
+    if (kDebugMode) {
+      debugPrint(this, wrapWidth: 1024);
+    }
+  }
   String? get nullIfEmpty => isEmpty?null:this;
 }
+
 
 
 extension DebugColor on String {
