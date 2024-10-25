@@ -45,7 +45,7 @@ extension DebugColor on String {
   String dpBlue() => "\x1B[34m$this\x1B[0m";
   String clearColors(){
     var result = this;
-    result = result.replaceAll('\x1B[33m', '');
+    result = result.replaceAll('\x1B[0m', '');
     for (var i = 0; i < 5; ++i) {
       result = result.replaceAll('\x1B[3${i}m', '');
     }
