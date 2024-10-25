@@ -43,6 +43,14 @@ extension DebugColor on String {
   String dpGreen() => "\x1B[32m$this\x1B[0m";
   String dpYellow() => "\x1B[33m$this\x1B[0m";
   String dpBlue() => "\x1B[34m$this\x1B[0m";
+  String clearColors(){
+    var result = this;
+    result = result.replaceAll('\x1B[33m', '');
+    for (var i = 0; i < 5; ++i) {
+      result = result.replaceAll('\x1B[3${i}m', '');
+    }
+    return result;
+  }
 }
 
 extension NullableExtention<T> on T {
