@@ -75,3 +75,11 @@ List<T> parseList<T>(
       .toList() ??
       <T>[];
 }
+
+extension PrintList on List{
+  print(){
+    if(length==2){
+      '${first.toString().dpBlue()}: ${last.toString().dpYellow()}'.print();
+    }
+  }
+}
