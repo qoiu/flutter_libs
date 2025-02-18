@@ -66,3 +66,12 @@ T parseEnum<T extends Enum>(List<T> list, String? data, [T? defaultValue]) {
       defaultValue ??
       list.first;
 }
+
+List<T> parseList<T>(
+    dynamic json, T Function(Map<String, dynamic> json) mapper) {
+  return (json as List?)
+      ?.map((e) => (e is Map<String, dynamic>) ? mapper(e) : null)
+      .whereType<T>()
+      .toList() ??
+      <T>[];
+}
