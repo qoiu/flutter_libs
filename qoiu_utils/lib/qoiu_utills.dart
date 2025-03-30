@@ -15,6 +15,7 @@ TextTheme getTextStyle([BuildContext? context]) =>
 
 extension GlobalKeyWithSize on GlobalKey  {
   Size? size<T extends Object>()=> (currentContext?.findRenderObject() as RenderBox?)?.size;
+  RenderBox? renderBox() => (currentContext?.findRenderObject() is RenderBox)?(currentContext?.findRenderObject() as RenderBox?):null;
 }
 
 extension DefaultDuration on Duration  {
