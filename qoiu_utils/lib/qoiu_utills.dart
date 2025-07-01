@@ -4,48 +4,55 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qoiu_utils/navigation.dart';
 
-
 ColorScheme getColorScheme([BuildContext? context]) =>
     Theme.of(context ?? rootNavigatorKey.currentContext!).colorScheme;
 
 TextTheme getTextStyle([BuildContext? context]) =>
     Theme.of(context ?? rootNavigatorKey.currentContext!).textTheme;
 
+extension GlobalKeyWithSize on GlobalKey {
+  Size? size<T extends Object>() =>
+      (currentContext?.findRenderObject() as RenderBox?)?.size;
 
-
-extension GlobalKeyWithSize on GlobalKey  {
-  Size? size<T extends Object>()=> (currentContext?.findRenderObject() as RenderBox?)?.size;
-  RenderBox? renderBox() => (currentContext?.findRenderObject() is RenderBox)?(currentContext?.findRenderObject() as RenderBox?):null;
+  RenderBox? renderBox() => (currentContext?.findRenderObject() is RenderBox)
+      ? (currentContext?.findRenderObject() as RenderBox?)
+      : null;
 }
 
-extension DefaultDuration on Duration  {
+extension DefaultDuration on Duration {
   static Duration get defaultDuration => const Duration(milliseconds: 500);
 }
 
 extension PrintString on String {
-  String get digits => replaceAll(RegExp(r'[^0-9]'),'');
+  String get digits => replaceAll(RegExp(r'[^0-9]'), '');
+
   print() {
     if (kDebugMode) {
       debugPrint(this);
     }
   }
+
   printLong() {
     if (kDebugMode) {
       debugPrint(this, wrapWidth: 1024);
     }
   }
-  String? get nullIfEmpty => isEmpty?null:this;
+
+  String? get nullIfEmpty => isEmpty ? null : this;
 }
-
-
 
 extension DebugColor on String {
   String dpRed() => "\x1B[31m$this\x1B[0m";
+
   String dpGreen() => "\x1B[32m$this\x1B[0m";
+
   String dpYellow() => "\x1B[33m$this\x1B[0m";
+
   String dpBlue() => "\x1B[34m$this\x1B[0m";
+
   String dp(int color) => "\x1B[${color}m$this\x1B[0m";
-  String clearColors(){
+
+  String clearColors() {
     var result = this;
     result = result.replaceAll('\x1B[0m', '');
     for (var i = 0; i < 5; ++i) {
@@ -56,6 +63,14 @@ extension DebugColor on String {
 }
 
 extension NullableExtention<T> on T {
+  R? as<R>() {
+    if (this is R) {
+      return this as R?;
+    } else {
+      return null;
+    }
+  }
+
   R? let<R>(R Function(T that) op) => this == null ? null : op(this);
 }
 
@@ -72,11 +87,12 @@ T parseEnum<T extends Enum>(List<T> list, String? data, [T? defaultValue]) {
 List<T> parseList<T>(
     dynamic json, T Function(Map<String, dynamic> json) mapper) {
   return (json as List?)
-      ?.map((e) => (e is Map<String, dynamic>) ? mapper(e) : null)
-      .whereType<T>()
-      .toList() ??
+          ?.map((e) => (e is Map<String, dynamic>) ? mapper(e) : null)
+          .whereType<T>()
+          .toList() ??
       <T>[];
 }
+
 extension StringMap on Map<String, dynamic> {
   Map<String, dynamic> toStringMap() =>
       Map.fromEntries(entries.map((e) => MapEntry(e.key, e.value.toString())));
@@ -106,7 +122,7 @@ extension StringMap on Map<String, dynamic> {
 
   String parseToString(
       [int? maxListSize, int depth = 0, bool fromMap = false]) {
-    if(length==1 && entries.first.value is String){
+    if (length == 1 && entries.first.value is String) {
       var entry = entries.first;
       String key = (defaultKeyColorize.containsKey(entry.key))
           ? defaultKeyColorize[entry.key]!(entry.key)
@@ -115,17 +131,17 @@ extension StringMap on Map<String, dynamic> {
     }
     var star = '*'.dp(90);
     var offsetStart = List.generate(depth, (i) => '').join('');
-    var result = depth==0? '{\n':'\n';
+    var result = depth == 0 ? '{\n' : '\n';
     var index = 0;
     for (var entry in entries) {
       var value = _typePrint(entry.value,
-          maxListSize: maxListSize, depth: depth+1, fromMap: true);
+          maxListSize: maxListSize, depth: depth + 1, fromMap: true);
       String key = (defaultKeyColorize.containsKey(entry.key))
           ? defaultKeyColorize[entry.key]!(entry.key)
           : entry.key.dpBlue();
       var offset = List.generate(depth, (i) => '---'.dp(90)).join('');
       result +=
-      '$star$offset${key.dp(1)}: $value${(entry.key!=entries.last.key)?',\n':''}';
+          '$star$offset${key.dp(1)}: $value${(entry.key != entries.last.key) ? ',\n' : ''}';
       index++;
     }
 
@@ -165,10 +181,11 @@ extension PrintList on List {
     } else {
       var list = (maxRecord == null ? this : take(maxRecord))
           .map((e) => _typePrint(e, depth: depth));
-      if(list.any((e) => e.length > 15) || list.length>10){
-        list = list.map((e)=>'\n${'*'.dp(90)}${List.generate(depth, (i) => '~~~'.dp(90)).join()}$e');
+      if (list.any((e) => e.length > 15) || list.length > 10) {
+        list = list.map((e) =>
+            '\n${'*'.dp(90)}${List.generate(depth, (i) => '~~~'.dp(90)).join()}$e');
       }
-      return '${maxRecord != null ? '($maxRecord)'.dp(37) : ''}${depth==0?'[':''}${list.join()}';
+      return '${maxRecord != null ? '($maxRecord)'.dp(37) : ''}${depth == 0 ? '[' : ''}${list.join()}';
     }
   }
 }
