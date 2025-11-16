@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:qoiu_utils/qoiu_utills.dart';
+import 'package:qoiu_utils/qoiu_utils.dart';
 
 class LoadingContainer extends StatefulWidget {
   final Widget? child;

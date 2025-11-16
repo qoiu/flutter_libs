@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:qoiu_utils/qoiu_utills.dart';
+import 'package:qoiu_utils/qoiu_utils.dart';
 
 test(){
   String text =
