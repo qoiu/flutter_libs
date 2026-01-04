@@ -1,5 +1,7 @@
 library qoiu_utills;
 
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qoiu_utils/navigation.dart';
@@ -188,4 +190,12 @@ extension PrintList on List {
       return '${maxRecord != null ? '($maxRecord)'.dp(37) : ''}${depth == 0 ? '[' : ''}${list.join()}';
     }
   }
+}
+
+double radiansToDegrees(double radians) {
+  return radians * 180 / pi;
+}
+
+double degreesToRadians(double degrees) {
+  return degrees * pi / 180;
 }
