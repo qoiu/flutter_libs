@@ -62,6 +62,8 @@ extension DebugColor on String {
     }
     return result;
   }
+
+  String ifEmpty(String text)=>isNotEmpty?this:text;
 }
 
 extension NullableExtention<T> on T {
