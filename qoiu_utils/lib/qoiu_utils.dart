@@ -1,10 +1,13 @@
 library qoiu_utills;
 
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qoiu_utils/navigation.dart';
+
+bool get kIsMobile => Platform.isAndroid || Platform.isIOS;
 
 ColorScheme getColorScheme([BuildContext? context]) =>
     Theme.of(context ?? rootNavigatorKey.currentContext!).colorScheme;
