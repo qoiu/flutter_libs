@@ -135,7 +135,7 @@ class TextBuilder {
     return this;
   }
 
-  TextBuilder maxLines(int value) {
+  TextBuilder maxLines(int? value) {
     _textMaxLines = value;
     return this;
   }
