@@ -90,17 +90,17 @@ class DatabaseBuilder<T extends Enum> {
     String path = Platform.isWindows
         ? await _getWindowsPath()
         : await _getMobilePath();
+    Database database;
+    for (var o in _tables) {
+      o.onCreate?.let((e) => _onCreate.add(e));
+      _onUpdate.addAll(o.onUpdate);
+    }
     ['initDatabase', path].print();
     var version = _onUpdate.length + 1;
     ['dbVersion',version].print();
     if (_deleteDatabase) {
       await deleteDatabase(path);
       'database deleted'.dpRed().print();
-    }
-    Database database;
-    for (var o in _tables) {
-      o.onCreate?.let((e) => _onCreate.add(e));
-      _onUpdate.addAll(o.onUpdate);
     }
     if (Platform.isWindows) {
       databaseFactory = databaseFactoryFfi;
