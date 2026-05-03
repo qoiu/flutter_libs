@@ -70,6 +70,7 @@ extension NullableExtention<T> on T {
   }
 
   R? let<R>(R? Function(T that) op) => this == null ? null : op(this);
+  Future<R?> letFuture<R>(Future<R?> Function(T that) op) async => this == null ? null : await op(this);
 }
 
 T parseEnum<T extends Enum>(List<T> list, String? data, [T? defaultValue]) {
