@@ -88,7 +88,7 @@ class DatabaseBuilder<T extends Enum> {
     var version = _onUpdate.length + 1;
     if (_deleteDatabase) {
       await deleteDatabase(path);
-      'table deleted'.dpRed().print();
+      'database deleted'.dpRed().print();
     }
     Database database;
     for (var o in _tables) {

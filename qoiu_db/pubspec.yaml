@@ -20,6 +20,7 @@ dependencies:
     git:
       url:  git@github.com:/qoiu/flutter_libs
       path: qoiu_utils
+      ref: 'master'
 
 dev_dependencies:
   flutter_test:
