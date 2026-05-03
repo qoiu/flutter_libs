@@ -90,6 +90,10 @@ class DatabaseBuilder<T extends Enum> {
       await deleteDatabase(path);
     }
     Database database;
+    for (var o in _tables) {
+      o.onCreate?.let((e)=>_onCreate.add(e));
+      _onUpdate.addAll(o.onUpdate);
+    }
     if (Platform.isWindows) {
       databaseFactory = databaseFactoryFfi;
       database = await databaseFactory.openDatabase(
