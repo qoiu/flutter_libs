@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qoiu_utils/extensions/list_extensions.dart';
 import 'package:qoiu_utils/qoiu_utils.dart';
 import 'package:sqflite/sqflite.dart';
@@ -54,20 +56,37 @@ class DatabaseBuilder<T extends Enum> {
     return this;
   }
 
-  Future<Database> build() async {
+  Future<String> _getWindowsPath() async {
+    databaseFactory = databaseFactoryFfi;
+    final documentsDirectory = await getApplicationDocumentsDirectory();
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String projectName = packageInfo.appName;
+
+    final path =
+        windowsPath ?? '${documentsDirectory.path}\\$projectName\\${this.path.replaceAll('.db', '')}.db';
+    return path;
+  }
+
+  Future<String> _getMobilePath() async {
     var simple = path.contains('/');
     var databasesPath = await getDatabasesPath();
-    String fPath = simple ? path : '$databasesPath/$path';
+    return simple ? path : '$databasesPath/${path.replaceAll('.db', '')}.db';
+  }
+
+  Future<Database> build() async {
+    String path = Platform.isWindows
+        ? await _getWindowsPath()
+        : await _getMobilePath();
     ['initDatabase', path].print();
     var version = _onUpdate.length + 1;
     if (_deleteDatabase) {
-      await deleteDatabase(fPath);
+      await deleteDatabase(path);
     }
     Database database;
     if (Platform.isWindows) {
       databaseFactory = databaseFactoryFfi;
       database = await databaseFactory.openDatabase(
-        fPath,
+        path,
         options: OpenDatabaseOptions(
           version: version,
           onCreate: (Database db, int version) async {
@@ -89,7 +108,7 @@ class DatabaseBuilder<T extends Enum> {
       );
     } else {
       database = await openDatabase(
-        fPath,
+        path,
         version: version,
         onCreate: (Database db, int version) async {
           for (var entry in _onUpdate) {
@@ -111,6 +130,7 @@ class DatabaseBuilder<T extends Enum> {
     for (var o in _drop) {
       await database.execute('DROP TABLE $o');
     }
+    ['initDatabase', 'complete'.dpGreen()].print();
     return database;
   }
 }
