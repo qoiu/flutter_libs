@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:qoiu_utils/extensions/list_extensions.dart';
 import 'package:qoiu_utils/qoiu_utils.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'base_database_table.dart';
 
 class DatabaseBuilder<T extends Enum> {
   String path;
+  String? windowsPath;
 
   final List<String> _onCreate = [];
   final List<String> _onUpdate = [];
@@ -13,7 +17,7 @@ class DatabaseBuilder<T extends Enum> {
   final List<BaseDatabaseTable> _tables = [];
   bool _deleteDatabase = false;
 
-  DatabaseBuilder(this.path);
+  DatabaseBuilder(this.path, {this.windowsPath});
 
   DatabaseBuilder addOnCreateList(List<String> execute) {
     _onCreate.addAll(execute);
@@ -53,31 +57,57 @@ class DatabaseBuilder<T extends Enum> {
   Future<Database> build() async {
     var simple = path.contains('/');
     var databasesPath = await getDatabasesPath();
-    String fPath = simple?path : '$databasesPath/$path';
-    ['initDatabase',path].print();
+    String fPath = simple ? path : '$databasesPath/$path';
+    ['initDatabase', path].print();
     var version = _onUpdate.length + 1;
     if (_deleteDatabase) {
       await deleteDatabase(fPath);
     }
-    var database = await openDatabase(
-      fPath,
-      version: version,
-      onCreate: (Database db, int version) async {
-        for (var entry in _onUpdate) {
-          await db.execute(entry);
-        }
-        for (var entry in _onUpdate) {
-          await db.execute(entry);
-        }
-      },
-      onUpgrade: (Database db, int oldVersion, int newVersion) async {
-        await _onUpdate.indexedMapFuture((index, e) async {
-          if (oldVersion < index + 1) {
-            await db.execute(e);
+    Database database;
+    if (Platform.isWindows) {
+      databaseFactory = databaseFactoryFfi;
+      database = await databaseFactory.openDatabase(
+        fPath,
+        options: OpenDatabaseOptions(
+          version: version,
+          onCreate: (Database db, int version) async {
+            for (var entry in _onUpdate) {
+              await db.execute(entry);
+            }
+            for (var entry in _onUpdate) {
+              await db.execute(entry);
+            }
+          },
+          onUpgrade: (Database db, int oldVersion, int newVersion) async {
+            await _onUpdate.indexedMapFuture((index, e) async {
+              if (oldVersion < index + 1) {
+                await db.execute(e);
+              }
+            });
+          },
+        ),
+      );
+    } else {
+      database = await openDatabase(
+        fPath,
+        version: version,
+        onCreate: (Database db, int version) async {
+          for (var entry in _onUpdate) {
+            await db.execute(entry);
           }
-        });
-      },
-    );
+          for (var entry in _onUpdate) {
+            await db.execute(entry);
+          }
+        },
+        onUpgrade: (Database db, int oldVersion, int newVersion) async {
+          await _onUpdate.indexedMapFuture((index, e) async {
+            if (oldVersion < index + 1) {
+              await db.execute(e);
+            }
+          });
+        },
+      );
+    }
     for (var o in _drop) {
       await database.execute('DROP TABLE $o');
     }
