@@ -2,15 +2,13 @@ import 'package:qoiu_utils/qoiu_utils.dart';
 import 'package:qoiu_utils/typedef.dart';
 import 'package:sqflite/sqflite.dart';
 
-class BaseDatabaseTable<T> {
+abstract class BaseDatabaseTable<T> {
   final Database database;
   final String name;
   final T Function(JsonMap) fromDB;
-  final String? onCreate;
-  final List<String> onUpdate;
 
   BaseDatabaseTable(
-      {required this.database, required this.name, required this.fromDB, this.onCreate, this.onUpdate = const []});
+      {required this.database, required this.name, required this.fromDB});
 
   ///@param where - "WHERE date='$day'"
   Future<List<T>> getWhere(String where) async {

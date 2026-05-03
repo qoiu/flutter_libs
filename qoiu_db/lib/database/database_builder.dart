@@ -9,6 +9,13 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'base_database_table.dart';
 
+abstract class DatabaseTableBuilder{
+  final String? onCreate;
+  final List<String> onUpdate;
+
+  DatabaseTableBuilder({this.onCreate, this.onUpdate = const []});
+}
+
 class DatabaseBuilder<T extends Enum> {
   String path;
   String? windowsPath;
@@ -16,7 +23,7 @@ class DatabaseBuilder<T extends Enum> {
   final List<String> _onCreate = [];
   final List<String> _onUpdate = [];
   final List<String> _drop = [];
-  final List<BaseDatabaseTable> _tables = [];
+  final List<DatabaseTableBuilder> _tables = [];
   bool _deleteDatabase = false;
 
   DatabaseBuilder(this.path, {this.windowsPath});
@@ -31,12 +38,12 @@ class DatabaseBuilder<T extends Enum> {
     return this;
   }
 
-  DatabaseBuilder addTables(List<BaseDatabaseTable> tables) {
+  DatabaseBuilder addTables(List<DatabaseTableBuilder> tables) {
     _tables.addAll(tables);
     return this;
   }
 
-  DatabaseBuilder addTable(BaseDatabaseTable table) {
+  DatabaseBuilder addTable(DatabaseTableBuilder table) {
     _tables.add(table);
     return this;
   }
