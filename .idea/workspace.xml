@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b0eb934a-14c2-42c9-9b01-13b64ca7605f" name="Changes" comment="add animated_colors.dart">
+    <list default="true" id="b0eb934a-14c2-42c9-9b01-13b64ca7605f" name="Changes" comment="fix common_text_builder.dart">
+      <change afterPath="$PROJECT_DIR$/qoiu_db/lib/database/base_database.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/qoiu_db/lib/database/database_builder.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -43,19 +45,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/qoiu/IdeaProjects/qoiu_flutter_libs/qoiu_utils/lib/components&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/qoiu/IdeaProjects/itpw/flutter_libraries",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "show.migrate.to.gradle.popup": "false"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\qoiu\IdeaProjects\qoiu_flutter_libs\qoiu_db\lib\database" />
       <recent name="C:\Users\qoiu\IdeaProjects\qoiu_flutter_libs\qoiu_utils\lib\components" />
       <recent name="C:\Users\qoiu\IdeaProjects\qoiu_flutter_libs\qoiu_utils\lib\extensions" />
       <recent name="C:\Users\qoiu\IdeaProjects\qoiu_flutter_libs\qoiu_utils\lib\async" />
@@ -185,7 +189,39 @@
       <option name="project" value="LOCAL" />
       <updated>1776151854450</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="add ifEmpty">
+      <option name="closed" value="true" />
+      <created>1776167912874</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1776167912874</updated>
+    </task>
+    <task id="LOCAL-00016" summary="add ifEmpty">
+      <option name="closed" value="true" />
+      <created>1776167930177</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1776167930177</updated>
+    </task>
+    <task id="LOCAL-00017" summary="add kIsMobile">
+      <option name="closed" value="true" />
+      <created>1777066449729</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1777066449729</updated>
+    </task>
+    <task id="LOCAL-00018" summary="fix common_text_builder.dart">
+      <option name="closed" value="true" />
+      <created>1777709386997</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1777709386997</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -212,6 +248,9 @@
     <MESSAGE value="add popup.dart" />
     <MESSAGE value="add popup_old.dart" />
     <MESSAGE value="add animated_colors.dart" />
-    <option name="LAST_COMMIT_MESSAGE" value="add animated_colors.dart" />
+    <MESSAGE value="add ifEmpty" />
+    <MESSAGE value="add kIsMobile" />
+    <MESSAGE value="fix common_text_builder.dart" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix common_text_builder.dart" />
   </component>
 </project>
