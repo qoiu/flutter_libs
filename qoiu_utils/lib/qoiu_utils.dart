@@ -15,15 +15,6 @@ ColorScheme getColorScheme([BuildContext? context]) =>
 TextTheme getTextStyle([BuildContext? context]) =>
     Theme.of(context ?? rootNavigatorKey.currentContext!).textTheme;
 
-extension GlobalKeyWithSize on GlobalKey {
-  Size? size<T extends Object>() =>
-      (currentContext?.findRenderObject() as RenderBox?)?.size;
-
-  RenderBox? renderBox() => (currentContext?.findRenderObject() is RenderBox)
-      ? (currentContext?.findRenderObject() as RenderBox?)
-      : null;
-}
-
 extension DefaultDuration on Duration {
   static Duration get defaultDuration => const Duration(milliseconds: 500);
 }
@@ -79,10 +70,6 @@ extension NullableExtention<T> on T {
   }
 
   R? let<R>(R Function(T that) op) => this == null ? null : op(this);
-}
-
-extension ColorFilterOnColor on Color {
-  ColorFilter defaultFilter() => ColorFilter.mode(this, BlendMode.srcATop);
 }
 
 T parseEnum<T extends Enum>(List<T> list, String? data, [T? defaultValue]) {
