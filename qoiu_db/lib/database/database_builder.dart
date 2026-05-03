@@ -88,6 +88,7 @@ class DatabaseBuilder<T extends Enum> {
     var version = _onUpdate.length + 1;
     if (_deleteDatabase) {
       await deleteDatabase(path);
+      'table deleted'.dpRed().print();
     }
     Database database;
     for (var o in _tables) {
@@ -101,7 +102,7 @@ class DatabaseBuilder<T extends Enum> {
         options: OpenDatabaseOptions(
           version: version,
           onCreate: (Database db, int version) async {
-            for (var entry in _onUpdate) {
+            for (var entry in _onCreate) {
               await db.execute(entry);
             }
             for (var entry in _onUpdate) {
