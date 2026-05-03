@@ -69,8 +69,7 @@ extension NullableExtention<T> on T {
     }
   }
 
-  R? let<R>(R Function(T that) op) => this == null ? null : op(this);
-  R? letNullable<R>(R? Function(T that) op) => this == null ? null : op(this);
+  R? let<R>(R? Function(T that) op) => this == null ? null : op(this);
 }
 
 T parseEnum<T extends Enum>(List<T> list, String? data, [T? defaultValue]) {
