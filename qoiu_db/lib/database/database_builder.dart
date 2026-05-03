@@ -116,8 +116,10 @@ class DatabaseBuilder<T extends Enum> {
             }
           },
           onUpgrade: (Database db, int oldVersion, int newVersion) async {
+            ['db version','$oldVersion -> $newVersion'].print();
             await _onUpdate.indexedMapFuture((index, e) async {
-              if (oldVersion < index + 1) {
+              if (oldVersion < index ) {
+                ['update', index].print();
                 await db.execute(e);
               }
             });
