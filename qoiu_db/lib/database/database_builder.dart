@@ -9,7 +9,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'base_database_table.dart';
 
-abstract class DatabaseTableBuilder {
+class DatabaseTableBuilder {
   final String? onCreate;
   final List<String> onUpdate;
 
