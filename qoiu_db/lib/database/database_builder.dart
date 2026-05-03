@@ -9,7 +9,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'base_database_table.dart';
 
-abstract class DatabaseTableBuilder{
+abstract class DatabaseTableBuilder {
   final String? onCreate;
   final List<String> onUpdate;
 
@@ -18,7 +18,7 @@ abstract class DatabaseTableBuilder{
 
 class DatabaseBuilder<T extends Enum> {
   String path;
-  String? windowsPath;
+  String? _windowsPath;
 
   final List<String> _onCreate = [];
   final List<String> _onUpdate = [];
@@ -26,7 +26,7 @@ class DatabaseBuilder<T extends Enum> {
   final List<DatabaseTableBuilder> _tables = [];
   bool _deleteDatabase = false;
 
-  DatabaseBuilder(this.path, {this.windowsPath});
+  DatabaseBuilder(this.path);
 
   DatabaseBuilder addOnCreateList(List<String> execute) {
     _onCreate.addAll(execute);
@@ -63,6 +63,11 @@ class DatabaseBuilder<T extends Enum> {
     return this;
   }
 
+  DatabaseBuilder windowsPath(String path) {
+    _windowsPath = path;
+    return this;
+  }
+
   Future<String> _getWindowsPath() async {
     databaseFactory = databaseFactoryFfi;
     final documentsDirectory = await getApplicationDocumentsDirectory();
@@ -70,7 +75,8 @@ class DatabaseBuilder<T extends Enum> {
     String projectName = packageInfo.appName;
 
     final path =
-        windowsPath ?? '${documentsDirectory.path}\\$projectName\\${this.path.replaceAll('.db', '')}.db';
+        _windowsPath?.let((e) => '${e.replaceAll('.db', '')}.db') ??
+        '${documentsDirectory.path}\\$projectName\\${this.path.replaceAll('.db', '')}.db';
     return path;
   }
 
@@ -92,7 +98,7 @@ class DatabaseBuilder<T extends Enum> {
     }
     Database database;
     for (var o in _tables) {
-      o.onCreate?.let((e)=>_onCreate.add(e));
+      o.onCreate?.let((e) => _onCreate.add(e));
       _onUpdate.addAll(o.onUpdate);
     }
     if (Platform.isWindows) {
