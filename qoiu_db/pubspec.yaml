@@ -17,7 +17,9 @@ dependencies:
   package_info_plus: ^8.0.0
 
   qoiu_utils:
-    path: ../qoiu_utils
+    git:
+      url:  git@github.com:/qoiu/flutter_libs
+      path: qoiu_utils
 
 dev_dependencies:
   flutter_test:
