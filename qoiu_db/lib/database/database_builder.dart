@@ -92,6 +92,7 @@ class DatabaseBuilder<T extends Enum> {
         : await _getMobilePath();
     ['initDatabase', path].print();
     var version = _onUpdate.length + 1;
+    ['dbVersion',version].print();
     if (_deleteDatabase) {
       await deleteDatabase(path);
       'database deleted'.dpRed().print();
@@ -139,8 +140,10 @@ class DatabaseBuilder<T extends Enum> {
           }
         },
         onUpgrade: (Database db, int oldVersion, int newVersion) async {
+          ['db version','$oldVersion -> $newVersion'].print();
           await _onUpdate.indexedMapFuture((index, e) async {
-            if (oldVersion < index + 1) {
+            if (oldVersion < index ) {
+              ['update', index].print();
               await db.execute(e);
             }
           });
