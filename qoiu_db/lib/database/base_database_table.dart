@@ -13,7 +13,6 @@ abstract class BaseDatabaseTable<T> {
   ///@param where - "WHERE date='$day'"
   Future<List<T>> getWhere(String where) async {
     var response = await database.rawQuery("SELECT*FROM $name $where");
-    'result: $response'.print();
     var result = response.map((e) {
       return fromDB(e);
     }).toList();
@@ -22,7 +21,6 @@ abstract class BaseDatabaseTable<T> {
 
   Future<List<T>> getAll() async {
     var response = await database.rawQuery("SELECT*FROM $name");
-    'result: $response'.print();
     var result = response.map((e) {
       return fromDB(e);
     }).toList();
@@ -32,7 +30,6 @@ abstract class BaseDatabaseTable<T> {
   ///@param where - "WHERE date='$day'"
   Future<T?> getById(int id) async {
     var response = await database.rawQuery("SELECT*FROM $name WHERE id='$id'");
-    'result: $response'.print();
     var result = response.map((e) {
       return fromDB(e);
     }).toList();
