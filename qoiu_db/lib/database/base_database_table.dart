@@ -8,7 +8,19 @@ abstract class BaseDatabaseTable<T> {
   final T Function(JsonMap) fromDB;
 
   BaseDatabaseTable(
-      {required this.database, required this.name, required this.fromDB});
+      {required this.database, required this.name, required this.fromDB}){
+    getColumns().then((e){
+      columnNames = e;
+    });
+  }
+
+  List<String> columnNames = [];
+
+  Future<List<String>> getColumns() async {
+    var results = await database.rawQuery("PRAGMA table_info('$name')");
+    return results.map((e) => e['name'] as String).toList();
+  }
+
 
   ///@param where - "WHERE date='$day'"
   Future<List<T>> getWhere(String where) async {
