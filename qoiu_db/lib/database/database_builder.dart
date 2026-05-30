@@ -136,6 +136,11 @@ class DatabaseBuilder<T extends Enum> {
       database = await openDatabase(
         path,
         version: version,
+        onOpen: (Database database)async{
+          for (var o in _drop) {
+            await database.execute('DROP TABLE IF EXISTS $o');
+          }
+        },
         onCreate: (Database db, int version) async {
           for (var entry in _onUpdate) {
             await db.execute(entry);
@@ -154,9 +159,6 @@ class DatabaseBuilder<T extends Enum> {
           });
         },
       );
-    }
-    for (var o in _drop) {
-      await database.execute('DROP TABLE $o');
     }
     ['initDatabase', 'complete'.dpGreen()].print();
     return database;
