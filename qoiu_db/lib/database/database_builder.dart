@@ -48,6 +48,11 @@ class DatabaseBuilder<T extends Enum> {
     return this;
   }
 
+  DatabaseBuilder dropTable(String table) {
+    _drop.add(table);
+    return this;
+  }
+
   DatabaseBuilder addOnUpdateList(List<String> execute) {
     _onUpdate.addAll(execute);
     return this;
