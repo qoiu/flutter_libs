@@ -15,4 +15,14 @@ extension ListExtension<T> on List<T> {
   }
 
   T random() => this[Random().nextInt(length)];
+
+  ///add or remove item
+  switchItem(T item){
+    if(contains(item)){
+      remove(item);
+    }else{
+      add(item);
+    }
+  }
+
 }
