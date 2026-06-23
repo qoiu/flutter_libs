@@ -88,6 +88,11 @@ List<T> parseList<T>(
       <T>[];
 }
 
+List<String> parseListString(dynamic jsonValue) {
+  if (jsonValue == null) return [];
+  return List<String>.from(jsonValue);
+}
+
 extension StringMap on Map<String, dynamic> {
   Map<String, dynamic> toStringMap() =>
       Map.fromEntries(entries.map((e) => MapEntry(e.key, e.value.toString())));
