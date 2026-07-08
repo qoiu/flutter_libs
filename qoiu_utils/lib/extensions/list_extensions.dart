@@ -4,6 +4,7 @@ extension ListExtension<T> on List<T> {
   List<R> indexedMap<R>(R Function(int index, T data) mapper) =>
       indexed.map((e) => mapper(e.$1, e.$2)).toList();
 
+  T random() => this[Random().nextInt(length)];
   Future<List<R>> indexedMapFuture<R>(
       Future<R> Function(int index, T data) mapper) async {
     List<R> result = [];
@@ -14,7 +15,6 @@ extension ListExtension<T> on List<T> {
     return result;
   }
 
-  T random() => this[Random().nextInt(length)];
 
   ///add or remove item
   switchItem(T item){

@@ -2,6 +2,12 @@ library qoiu_db;
 
 export 'database/base_database_table.dart';
 export 'database/database_builder.dart';
+export 'database/base_many_to_many.dart';
+export 'database/base_one_to_many.dart';
+export 'database/db_entity.dart';
+export 'database/json_map_extension.dart';
+export 'database/many_to_many_link.dart';
+export 'database/one_to_one_controller.dart';
 
 export 'package:sqflite/sqflite.dart';
 export 'package:sqflite_common_ffi/sqflite_ffi.dart';
