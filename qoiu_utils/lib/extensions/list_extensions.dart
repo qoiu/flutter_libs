@@ -1,10 +1,16 @@
 import 'dart:math';
 
+final randomGenerator = Random();
 extension QoiuListExtension<T> on List<T> {
   List<R> indexedMap<R>(R Function(int index, T data) mapper) =>
       indexed.map((e) => mapper(e.$1, e.$2)).toList();
 
-  T random() => this[Random().nextInt(length)];
+
+  T random([Random? random]) {
+    assert(isNotEmpty, "Can't get a random element from an empty list");
+    return this[randomGenerator.nextInt(length)];
+  }
+
   Future<List<R>> indexedMapFuture<R>(
       Future<R> Function(int index, T data) mapper) async {
     List<R> result = [];
