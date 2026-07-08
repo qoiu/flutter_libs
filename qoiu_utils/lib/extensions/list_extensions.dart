@@ -1,4 +1,3 @@
-library qoiu_utills;
 import 'dart:math';
 
 extension ListExtension<T> on List<T> {
