@@ -73,7 +73,7 @@ abstract class DatabaseInterface {
   List<String> get drop => [];
 
   ///List of tables in database
-  List<DatabaseTableInterface> get tables => [];
+  List<DatabaseCreateTableInterface> get tables => [];
   bool _deleteDatabase = false;
 
   Future<String> _getWindowsPath() async {
@@ -138,8 +138,7 @@ abstract class DatabaseInterface {
       );
     }
     for (var table in tables) {
-      table.database = _database;
-      table.initColumns();
+      table.init(_database);
     }
     ['initDatabase', 'complete'.dpGreen()].print();
     return _database;

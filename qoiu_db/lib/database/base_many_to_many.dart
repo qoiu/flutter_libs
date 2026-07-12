@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:qoiu_db/qoiu_db.dart';
 import 'package:qoiu_utils/qoiu_utils_export.dart';
 
-abstract class BaseManyToMany<T1, T2> {
-  late final Database database;
+abstract class BaseManyToMany<T1, T2> extends DatabaseCreateTableInterface{
 
   // Эти поля описывают структуру, они нужны для генерации SQL и запросов
-  final String tableName;
   final String idColumn1;
   final String idColumn2;
   final String table1Name;
@@ -17,7 +15,7 @@ abstract class BaseManyToMany<T1, T2> {
   final FutureOr<T2> Function(Map<String, dynamic>) fromDbT2;
 
   BaseManyToMany({
-    required this.tableName,
+    required super.name,
     required this.idColumn1,
     required this.idColumn2,
     required this.table1Name,
@@ -25,21 +23,6 @@ abstract class BaseManyToMany<T1, T2> {
     required this.fromDbT1,
     required this.fromDbT2,
   });
-
-  BaseManyToMany.fromBuilder(
-      {required ManyToManyBuilder builder,
-      required this.fromDbT1,
-      required this.fromDbT2})
-      : tableName = builder.tableName,
-        idColumn1 = builder.idColumn1,
-        idColumn2 = builder.idColumn2,
-        table1Name = builder.table1Name,
-        table2Name = builder.table2Name;
-
-  // Метод инициализации базы
-  void init(Database db) {
-    database = db;
-  }
 
   final _updateController = StreamController<void>.broadcast();
 
@@ -53,8 +36,9 @@ abstract class BaseManyToMany<T1, T2> {
   }
 
   // Генератор скрипта на основе полей текущего класса
-  String get createTableSql => '''
-    CREATE TABLE $tableName (
+  @override
+  String get onCreate => '''
+    CREATE TABLE $name (
       $idColumn1 INTEGER,
       $idColumn2 INTEGER,
       PRIMARY KEY ($idColumn1, $idColumn2),
@@ -65,7 +49,7 @@ abstract class BaseManyToMany<T1, T2> {
 
   Future<void> createLink(int id1, int id2) async {
     await database.insert(
-        tableName,
+        name,
         {
           idColumn1: id1,
           idColumn2: id2,
@@ -77,7 +61,7 @@ abstract class BaseManyToMany<T1, T2> {
       JsonMap entityData, int id1, int id2) async {
     await database.transaction((txn) async {
       await txn.insert(
-        tableName,
+        name,
         entityData,
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
@@ -85,7 +69,7 @@ abstract class BaseManyToMany<T1, T2> {
       final Map<String, dynamic> linkData = {idColumn1: id1, idColumn2: id2};
 
       await txn.insert(
-        tableName,
+        name,
         linkData,
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
@@ -97,7 +81,7 @@ abstract class BaseManyToMany<T1, T2> {
   // Удалить связь
   Future<void> removeLink(int id1, int id2) async {
     await database.delete(
-      tableName,
+      name,
       where: '$idColumn1 = ? AND $idColumn2 = ?',
       whereArgs: [id1, id2],
     );
@@ -108,7 +92,7 @@ abstract class BaseManyToMany<T1, T2> {
     try {
       var query = '''
       SELECT t1.* FROM $table1Name t1
-      INNER JOIN $tableName link ON t1.id = link.$idColumn1
+      INNER JOIN $name link ON t1.id = link.$idColumn1
       WHERE link.$idColumn2 = ?
     ''';
       final List<Map<String, dynamic>> res =
@@ -124,7 +108,7 @@ abstract class BaseManyToMany<T1, T2> {
   Future<List<T2>> getT2ByT1Id(int t1id) async {
     var query = '''
       SELECT t2.* FROM $table2Name t2
-      INNER JOIN $tableName link ON t2.id = link.$idColumn2
+      INNER JOIN $name link ON t2.id = link.$idColumn2
       WHERE link.$idColumn1 = ?
     ''';
     final List<Map<String, dynamic>> res =
@@ -156,14 +140,14 @@ extension StartWithFuture<E> on Stream<E> {
 enum LinkSide { side1, side2 }
 
 class ManyToManyBuilder extends DatabaseInterface {
-  final String tableName;
+  final String name;
   final String idColumn1;
   final String idColumn2;
   final String table1Name;
   final String table2Name;
 
   ManyToManyBuilder(
-      {required this.tableName,
+      {required this.name,
       required this.idColumn1,
       required this.idColumn2,
       required this.table1Name,
@@ -172,7 +156,7 @@ class ManyToManyBuilder extends DatabaseInterface {
   @override
   List<String> get onCreate => [
         '''
-   CREATE TABLE IF NOT EXISTS $tableName (
+   CREATE TABLE IF NOT EXISTS $name (
       $idColumn1 INTEGER NOT NULL,
       $idColumn2 INTEGER NOT NULL,
       
