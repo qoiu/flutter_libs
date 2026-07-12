@@ -1,4 +1,4 @@
-import 'package:qoiu_db/database/database_table_iterface.dart';
+import 'package:qoiu_db/database/database_table_interface.dart';
 import 'package:qoiu_utils/qoiu_utils_export.dart';
 
 import 'db_entity.dart';

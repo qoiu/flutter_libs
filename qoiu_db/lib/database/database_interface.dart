@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:qoiu_utils/qoiu_utils.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'database_table_iterface.dart';
+import 'database_table_interface.dart';
 
 /// An abstract class for quick database creation.
 ///
