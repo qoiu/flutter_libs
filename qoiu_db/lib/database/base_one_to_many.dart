@@ -22,7 +22,7 @@ class DbOneToManyLink<T extends DbEntity, R extends BaseDatabaseTable<T>>
   Future<List<T>> fetch() async {
     ['fetch',parentId].print();
     if (parentId == -1) return [];
-   return await table.getWhere("WHERE $parentIdColumn = $parentId");
+   return await table.getAll("WHERE $parentIdColumn = $parentId");
   }
 
 

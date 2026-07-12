@@ -1,29 +1,52 @@
-import 'package:qoiu_utils/qoiu_utils.dart';
+import 'package:flutter/foundation.dart';
+import 'package:qoiu_db/database/db_entity.dart';
 import 'package:qoiu_utils/typedef.dart';
 import 'package:sqflite/sqflite.dart';
 
-abstract class BaseDatabaseTable<T> {
-  final Database database;
+abstract class BaseDatabaseTable<T extends DbEntity> {
+  late Database database;
   final String name;
   final T Function(JsonMap) fromDB;
 
   BaseDatabaseTable(
-      {required this.database, required this.name, required this.fromDB}){
-    getColumns().then((e){
-      columnNames = e;
-    });
-  }
+      {required this.name, required this.fromDB});
 
-  List<String> columnNames = [];
+  /// Sql code called onCreate
+  ///
+  /// example
+ ///
+  /// ```dart
+  /// @override
+ /// String get onCreate => '''
+ ///         CREATE TABLE IF NOT EXISTS task (
+ ///   id INTEGER PRIMARY KEY,
+ ///   title TEXT NOT NULL,
+ ///   progress INTEGER,
+ ///   duration INTEGER,
+ ///   target INTEGER,
+ ///   lvl INTEGER,
+ ///   lvlPercent REAL,
+ ///   extra TEXT
+/// )
+ ///         ''';
+  ///         ```
+  String? get onCreate=>null;
+  Map<int,String> get onUpdate => {};
 
-  Future<List<String>> getColumns() async {
+  List<String> _columnNames = [];
+
+  @nonVirtual
+  List<String> get columnNames=>_columnNames;
+
+  initColumns() async {
     var results = await database.rawQuery("PRAGMA table_info('$name')");
-    return results.map((e) => e['name'] as String).toList();
+    _columnNames = results.map((e) => e['name'] as String).toList();
   }
+
 
 
   ///@param where - "WHERE date='$day'"
-  Future<List<T>> getWhere(String where) async {
+  Future<List<T>> getAll([String where='']) async {
     var response = await database.rawQuery("SELECT*FROM $name $where");
     var result = response.map((e) {
       return fromDB(e);
@@ -31,15 +54,7 @@ abstract class BaseDatabaseTable<T> {
     return result;
   }
 
-  Future<List<T>> getAll() async {
-    var response = await database.rawQuery("SELECT*FROM $name");
-    var result = response.map((e) {
-      return fromDB(e);
-    }).toList();
-    return result;
-  }
-
-  ///@param where - "WHERE date='$day'"
+  ///@param id - "WHERE id='$id'"
   Future<T?> getById(int id) async {
     var response = await database.rawQuery("SELECT*FROM $name WHERE id='$id'");
     var result = response.map((e) {
@@ -48,21 +63,21 @@ abstract class BaseDatabaseTable<T> {
     return result.firstOrNull;
   }
 
-  Future<int> add(JsonMap item) async {
-    return await database.insert(name, item);
+  Future<int> add(DbEntity item) async {
+    return await database.insert(name, item.toDB());
   }
 
-  Future<T> addAndUse(JsonMap item) async {
+  Future<T> addAndUse(DbEntity item) async {
     var id = await add(item);
     return (await getById(id))!;
   }
 
-  Future update(JsonMap task, int id) async {
+  Future update(DbEntity task) async {
     database.update(
       name,
-      task,
+      task.toDB(),
       where: 'id = ?',
-      whereArgs: [id],
+      whereArgs: [task.id],
     );
   }
 
