@@ -3,12 +3,12 @@ import 'package:qoiu_db/database/db_entity.dart';
 import 'package:qoiu_utils/typedef.dart';
 import 'package:sqflite/sqflite.dart';
 
-abstract class BaseDatabaseTable<T extends DbEntity> {
+abstract class DatabaseTableInterface<T extends DbEntity> {
   late Database database;
   final String name;
   final T Function(JsonMap) fromDB;
 
-  BaseDatabaseTable(
+  DatabaseTableInterface(
       {required this.name, required this.fromDB});
 
   /// Sql code called onCreate

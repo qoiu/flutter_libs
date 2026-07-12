@@ -1,6 +1,6 @@
 library qoiu_db;
 
-export 'database/base_database_table.dart';
+export 'database/database_table_iterface.dart';
 export 'database/database_interface.dart';
 export 'database/base_many_to_many.dart';
 export 'database/base_one_to_many.dart';

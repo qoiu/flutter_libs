@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:qoiu_utils/qoiu_utils.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'base_database_table.dart';
+import 'database_table_iterface.dart';
 
 /// An abstract class for quick database creation.
 ///
@@ -73,7 +73,7 @@ abstract class DatabaseInterface {
   List<String> get drop => [];
 
   ///List of tables in database
-  List<BaseDatabaseTable> get tables => [];
+  List<DatabaseTableInterface> get tables => [];
   bool _deleteDatabase = false;
 
   Future<String> _getWindowsPath() async {

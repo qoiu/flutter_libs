@@ -1,10 +1,10 @@
-import 'package:qoiu_db/database/base_database_table.dart';
+import 'package:qoiu_db/database/database_table_iterface.dart';
 import 'package:qoiu_utils/qoiu_utils.dart';
 
 import 'db_entity.dart';
 import 'many_to_many_link.dart';
 
-class DbOneToManyLink<T extends DbEntity, R extends BaseDatabaseTable<T>>
+class DbOneToManyLink<T extends DbEntity, R extends DatabaseTableInterface<T>>
     implements ToManyLink<T> {
 
   final int parentId;
