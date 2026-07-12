@@ -30,7 +30,7 @@ abstract class DatabaseTableInterface<T extends DbEntity> {
 /// )
  ///         ''';
   ///         ```
-  String? get onCreate=>null;
+  String? get onCreate;
   Map<int,String> get onUpdate => {};
 
   List<String> _columnNames = [];
