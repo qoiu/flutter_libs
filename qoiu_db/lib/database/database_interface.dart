@@ -113,6 +113,7 @@ abstract class DatabaseInterface {
         ? await _getWindowsPath()
         : await _getMobilePath();
     onCreate.addAll(tables.map((e)=>e.onCreate));
+    log(['tables', tables.map((e)=>e.name)]);
     for (var table in tables) {
       // table.onCreate.let((e) => onCreate.add(e));
       _onUpdate.addAll(table.onUpdate);
