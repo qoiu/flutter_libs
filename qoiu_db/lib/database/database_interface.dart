@@ -38,9 +38,12 @@ abstract class DatabaseInterface {
   String databaseName;
 
   @nonVirtual
-  int databaseVersion ;
+  int databaseVersion;
+
+  bool get printLog => false;
 
   DatabaseInterface({this.databaseName = 'database', this.databaseVersion = 1});
+
   ///  Special path for windows if you want something like
   ///  ```dart
   ///
@@ -64,7 +67,8 @@ abstract class DatabaseInterface {
   ///Extra function
   List<String> get onCreate => [];
 
-  Map<int,String> _onUpdate = {};
+  Map<int, String> _onUpdate = {};
+
   ///Name of tables to drop
   ///
   /// ```SQL
@@ -82,14 +86,19 @@ abstract class DatabaseInterface {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String projectName = packageInfo.appName;
 
-    final path = (await windowsPath)?.let((e) => '${e.replaceAll('.db', '')}.db') ??
+    final path =
+        (await windowsPath)?.let((e) => '${e.replaceAll('.db', '')}.db') ??
         '${documentsDirectory.path}\\$projectName\\${databaseName.replaceAll('.db', '')}.db';
     return path;
   }
 
-  FutureOr<void> onOpen(Database database) async{}
+  FutureOr<void> onOpen(Database database) async {}
 
   Future<String> get databasesPath async => await getDatabasesPath();
+
+  void log(List<dynamic> list) {
+    if (printLog) list.print();
+  }
 
   Future<String> _getMobilePath() async {
     var simple = databaseName.contains('/');
@@ -100,22 +109,22 @@ abstract class DatabaseInterface {
   }
 
   Future<Database> init() async {
-    String path =
-        Platform.isWindows ? await _getWindowsPath() : await _getMobilePath();
+    String path = Platform.isWindows
+        ? await _getWindowsPath()
+        : await _getMobilePath();
+    onCreate.addAll(tables.map((e)=>e.onCreate));
     for (var table in tables) {
-      table.onCreate?.let((e) => onCreate.add(e));
-      ['${table.name} - onUpdate', table.onUpdate.length].print();
-      ['${table.name} - onUpdate', table.onUpdate].print();
+      // table.onCreate.let((e) => onCreate.add(e));
       _onUpdate.addAll(table.onUpdate);
     }
-    ['onUpdate', _onUpdate].print();
-    ['onUpdate', _onUpdate.length].print();
-    ['initDatabase', path].print();
+    log(['onCreate', onCreate.length]);
+    log(['onUpdate', _onUpdate.length]);
+    log(['initDatabase', path]);
     var version = databaseVersion;
-    ['dbVersion', version].print();
+    log(['dbVersion', version]);
     if (_deleteDatabase) {
       await deleteDatabase(path);
-      'database deleted'.dpRed().print();
+      log(['database deleted'.dpRed()]);
     }
     if (Platform.isWindows) {
       databaseFactory = databaseFactoryFfi;
@@ -140,25 +149,29 @@ abstract class DatabaseInterface {
     for (var table in tables) {
       await table.init(_database);
     }
-    ['initDatabase', 'complete'.dpGreen()].print();
+    log(['initDatabase', 'complete'.dpGreen()]);
     return _database;
   }
 
   FutureOr<void> _onCreateMethod(Database db, int version) async {
-        for (var entry in onCreate) {
-          await db.execute(entry);
-        }
-        // for (var entry in _onUpdate.entries) {
-        //   await db.execute(entry);
-        // }
-      }
+    for (var entry in onCreate) {
+      await db.execute(entry);
+    }
+    // for (var entry in _onUpdate.entries) {
+    //   await db.execute(entry);
+    // }
+  }
 
-  FutureOr<void> _onUpgradeMethod(Database db, int oldVersion, int newVersion) async {
-      ['db version', '$oldVersion -> $newVersion'].print();
-      for (var entry in _onUpdate.entries) {
-        if(oldVersion<entry.key){
-          await db.execute(entry.value);
-        }
+  FutureOr<void> _onUpgradeMethod(
+    Database db,
+    int oldVersion,
+    int newVersion,
+  ) async {
+    log(['db version', '$oldVersion -> $newVersion']);
+    for (var entry in _onUpdate.entries) {
+      if (oldVersion < entry.key) {
+        await db.execute(entry.value);
       }
     }
+  }
 }
