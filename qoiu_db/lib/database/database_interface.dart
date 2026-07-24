@@ -67,6 +67,8 @@ abstract class DatabaseInterface {
   ///Extra function
   List<String> get onCreate => [];
 
+  List<String> _onCreate = [];
+
   Map<int, String> _onUpdate = {};
 
   ///Name of tables to drop
@@ -112,7 +114,7 @@ abstract class DatabaseInterface {
     String path = Platform.isWindows
         ? await _getWindowsPath()
         : await _getMobilePath();
-    onCreate.addAll(tables.map((e)=>e.onCreate));
+    _onCreate.addAll(tables.map((e)=>e.onCreate));
     log(['tables', tables.map((e)=>e.name)]);
     for (var table in tables) {
       // table.onCreate.let((e) => onCreate.add(e));
@@ -155,6 +157,9 @@ abstract class DatabaseInterface {
   }
 
   FutureOr<void> _onCreateMethod(Database db, int version) async {
+    for (var entry in _onCreate) {
+      await db.execute(entry);
+    }
     for (var entry in onCreate) {
       await db.execute(entry);
     }
