@@ -138,7 +138,7 @@ abstract class DatabaseInterface {
       );
     }
     for (var table in tables) {
-      table.init(_database);
+      await table.init(_database);
     }
     ['initDatabase', 'complete'.dpGreen()].print();
     return _database;
