@@ -79,6 +79,11 @@ T parseEnum<T extends Enum>(List<T> list, String? data, [T? defaultValue]) {
       list.first;
 }
 
+T? parseEnumNullable<T extends Enum>(List<T> list, String? data, [T? defaultValue]) {
+  return list.where((element) => element.name == data).firstOrNull ??
+      defaultValue;
+}
+
 List<T> parseList<T>(
     dynamic json, T Function(Map<String, dynamic> json) mapper) {
   return (json as List?)
